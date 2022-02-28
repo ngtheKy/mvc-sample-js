@@ -1,0 +1,185 @@
+enum CarType {
+    MICRO, MINI, LUXURY
+}
+
+abstract class Car {
+    Car(CarType model, Location location) {
+        this.model = model;
+        this.location = location;
+    }
+
+    abstract void construct();
+
+    CarType model = null;
+    Location location = null;
+
+    CarType getModel() {
+        return model;
+    }
+
+    void setModel(CarType model) {
+        this.model = model;
+    }
+
+    Location getLocation() {
+        return location;
+    }
+
+    void setLocation(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "CarModel - " + model + " located in " + location;
+    }
+}
+
+class LuxuryCar extends Car {
+    LuxuryCar(Location location) {
+        super(CarType.LUXURY, location);
+        construct();
+    }
+
+    @Override
+    protected void construct() {
+        System.out.println("Connecting to luxury car");
+    }
+}
+
+class MicroCar extends Car {
+    MicroCar(Location location) {
+        super(CarType.MICRO, location);
+        construct();
+    }
+
+    @Override
+    protected void construct() {
+        System.out.println("Connecting to Micro Car ");
+    }
+}
+
+class MiniCar extends Car {
+    MiniCar(Location location) {
+        super(CarType.MINI, location);
+        construct();
+    }
+
+    @Override
+    void construct() {
+        System.out.println("Connecting to Mini car");
+    }
+}
+
+enum Location {
+    DEFAULT, USA, VN
+}
+
+class VNCarFactory {
+    static Car buildCar(CarType model) {
+        Car car = null;
+        switch (model) {
+            case MICRO:
+                car = new MicroCar(Location.VN);
+                break;
+
+            case MINI:
+                car = new MiniCar(Location.VN);
+                break;
+
+            case LUXURY:
+                car = new LuxuryCar(Location.VN);
+                break;
+
+            default:
+                break;
+
+        }
+        return car;
+    }
+}
+
+class DefaultCarFactory {
+    public static Car buildCar(CarType model) {
+        Car car = null;
+        switch (model) {
+            case MICRO:
+                car = new MicroCar(Location.DEFAULT);
+                break;
+
+            case MINI:
+                car = new MiniCar(Location.DEFAULT);
+                break;
+
+            case LUXURY:
+                car = new LuxuryCar(Location.DEFAULT);
+                break;
+
+            default:
+                break;
+
+        }
+        return car;
+    }
+}
+
+class USACarFactory {
+    public static Car buildCar(CarType model) {
+        Car car = null;
+        switch (model) {
+            case MICRO:
+                car = new MicroCar(Location.USA);
+                break;
+
+            case MINI:
+                car = new MiniCar(Location.USA);
+                break;
+
+            case LUXURY:
+                car = new LuxuryCar(Location.USA);
+                break;
+
+            default:
+                break;
+
+        }
+        return car;
+    }
+}
+
+class CarFactory {
+    private CarFactory() {
+
+    }
+
+    public static Car buildCar(CarType type) {
+        Car car = null;
+
+        Location location = Location.VN;
+
+        switch (location) {
+            case USA:
+                car = USACarFactory.buildCar(type);
+                break;
+
+            case VN:
+                car = VNCarFactory.buildCar(type);
+                break;
+
+            default:
+                car = DefaultCarFactory.buildCar(type);
+
+        }
+
+        return car;
+
+    }
+}
+
+class AbstractDesign {
+    public static void main(String[] args) {
+        System.out.println(CarFactory.buildCar(CarType.MICRO));
+        System.out.println(CarFactory.buildCar(CarType.MINI));
+        System.out.println(CarFactory.buildCar(CarType.LUXURY));
+    }
+}
